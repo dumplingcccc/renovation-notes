@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的装修笔记</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F5F4F0;
+  --surface:#FFFFFF;
+  --surface2:#F9F8F5;
+  --border:#E5E3DC;
+  --border2:#D5D2C8;
+  --text:#1A1917;
+  --text2:#6B6860;
+  --text3:#A09D96;
+  --accent:#2C2C2C;
+  --red:#C0392B;
+  --green:#2D7D46;
+  --blue:#1A5FA8;
+  --orange:#D4620A;
+  --tag-red-bg:#FEF2F0; --tag-red:#C0392B;
+  --tag-green-bg:#F0F7F2; --tag-green:#2D7D46;
+  --tag-blue-bg:#EFF5FC; --tag-blue:#1A5FA8;
+  --tag-orange-bg:#FDF4EE; --tag-orange:#D4620A;
+}
+html{background:#E8E6E0;}
+body{
+  font-family:'Noto Sans SC',sans-serif;
+  background:var(--bg);
+  max-width:900px;
+  margin:0 auto;
+  min-height:100vh;
+  color:var(--text);
+  box-shadow:0 0 40px rgba(0,0,0,0.08);
+}
+
+/* HEADER */
+.header{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:2rem 2.5rem 1.5rem;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:1rem;
+}
+.header-left{}
+.header-eyebrow{
+  font-size:11px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--text3);
+  margin-bottom:8px;
+}
+.header-title{
+  font-size:26px;
+  font-weight:600;
+  color:var(--text);
+  letter-spacing:-0.5px;
+  margin-bottom:5px;
+}
+.header-sub{
+  font-size:13px;
+  color:var(--text2);
+  font-weight:300;
+}
+.header-stats{
+  display:flex;
+  gap:1.5rem;
+  text-align:center;
+  flex-shrink:0;
+}
+.stat-item{}
+.stat-n{
+  font-size:22px;
+  font-weight:600;
+  color:var(--text);
+  display:block;
+  line-height:1;
+}
+.stat-l{
+  font-size:10px;
+  color:var(--text3);
+  margin-top:4px;
+  display:block;
+  letter-spacing:1px;
+}
+
+/* EDIT BAR */
+.edit-bar{
+  background:var(--surface2);
+  border-bottom:1px solid var(--border);
+  padding:0.5rem 2.5rem;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:12px;
+  color:var(--text2);
+}
+.toggle-wrap{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;}
+.ttrack{width:34px;height:18px;border-radius:9px;background:var(--border2);position:relative;transition:background .2s;}
+.ttrack.on{background:var(--text);}
+.tthumb{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.ttrack.on .tthumb{transform:translateX(16px);}
+.edit-hint{color:var(--text3);font-size:11px;}
+
+/* TABS */
+.tabs{
+  display:flex;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:0 2.5rem;
+  gap:0;
+  overflow-x:auto;
+}
+.tab{
+  padding:0.75rem 1rem;
+  font-size:13px;
+  color:var(--text2);
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  background:none;
+  border-top:none;border-left:none;border-right:none;
+  font-family:inherit;
+  display:flex;align-items:center;gap:6px;
+  transition:all .15s;
+  margin-bottom:-1px;
+}
+.tab i{font-size:15px;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:500;}
+
+/* PANELS */
+.panel{display:none;padding:1.5rem 2.5rem 3rem;}
+.panel.active{display:block;}
+
+/* STYLE OVERVIEW PANEL */
+.style-hero{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:1.5rem;
+  margin-bottom:1.2rem;
+}
+.style-hero-title{font-size:13px;font-weight:500;color:var(--text2);margin-bottom:1rem;display:flex;align-items:center;gap:6px;}
+.style-hero-title i{font-size:16px;}
+.style-palette{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;}
+.swatch{
+  width:44px;height:44px;border-radius:8px;cursor:pointer;
+  border:2px solid transparent;transition:transform .15s;
+  position:relative;
+}
+.swatch:hover{transform:scale(1.1);}
+.swatch.selected{border-color:var(--text);}
+.swatch-label{font-size:10px;color:var(--text3);text-align:center;margin-top:3px;}
+.swatch-wrap{text-align:center;}
+.style-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.style-tag{
+  padding:5px 12px;border-radius:20px;font-size:12px;
+  border:1px solid var(--border2);background:var(--surface2);
+  color:var(--text2);cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:4px;
+}
+.style-tag i{font-size:13px;}
+.style-tag:hover{border-color:var(--text);color:var(--text);}
+.style-tag.selected{background:var(--text);color:#fff;border-color:var(--text);}
+
+.style-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:1.2rem;
+}
+.style-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:1.1rem 1.2rem;
+}
+.sc-head{font-size:11px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.sc-head i{font-size:14px;}
+.sc-val{font-size:13px;color:var(--text);line-height:1.6;outline:none;min-height:20px;}
+.sc-val:focus{border-bottom:1px dashed var(--border2);}
+.sc-val[contenteditable=true]:empty::before{content:attr(data-placeholder);color:var(--text3);}
+
+.style-note{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:1.1rem 1.2rem;
+}
+.style-note-body{font-size:13px;color:var(--text);line-height:1.75;outline:none;min-height:60px;}
+.style-note-body:focus{outline:none;}
+.style-note-body[contenteditable=true]:empty::before{content:'在这里写下你对整体家居风格的想象……';color:var(--text3);}
+
+/* ROOMS */
+.room-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.2rem;}
+.pill{
+  padding:5px 13px;border-radius:6px;font-size:12.5px;
+  border:1px solid var(--border);background:var(--surface);
+  color:var(--text2);cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;gap:5px;
+  transition:all .15s;
+}
+.pill i{font-size:14px;}
+.pill:hover{border-color:var(--border2);color:var(--text);}
+.pill.active{background:var(--text);color:#fff;border-color:var(--text);}
+.room-sec{display:none;}
+.room-sec.active{display:block;}
+.room-heading{
+  font-size:15px;font-weight:600;color:var(--text);
+  margin-bottom:1rem;
+  display:flex;align-items:center;gap:8px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.room-heading i{font-size:18px;color:var(--text2);}
+
+/* CARDS */
+.cards{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem;}
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:1rem 1.1rem;
+  transition:box-shadow .15s;
+  position:relative;
+}
+.card:hover{box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:5px;}
+.card-left{display:flex;align-items:flex-start;gap:8px;flex:1;}
+.card-icon{
+  width:30px;height:30px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:15px;margin-top:1px;
+}
+.ci-must{background:var(--tag-red-bg);color:var(--tag-red);}
+.ci-good{background:var(--tag-green-bg);color:var(--tag-green);}
+.ci-idea{background:var(--tag-blue-bg);color:var(--tag-blue);}
+.card-title{
+  font-size:13.5px;font-weight:500;color:var(--text);
+  line-height:1.4;outline:none;flex:1;
+}
+.card-title:focus{border-bottom:1px dashed var(--border2);}
+.card-badge{
+  font-size:10px;padding:3px 8px;border-radius:4px;
+  white-space:nowrap;flex-shrink:0;font-weight:400;
+  display:flex;align-items:center;gap:3px;
+}
+.card-badge i{font-size:12px;}
+.b-must{background:var(--tag-red-bg);color:var(--tag-red);}
+.b-good{background:var(--tag-green-bg);color:var(--tag-green);}
+.b-idea{background:var(--tag-blue-bg);color:var(--tag-blue);}
+.card-body{
+  font-size:12.5px;color:var(--text2);line-height:1.75;
+  outline:none;padding-left:38px;
+}
+.card-body:focus{border-bottom:1px dashed var(--border2);}
+.card-body[contenteditable=true]:empty::before{content:'点击输入内容…';color:var(--text3);}
+
+.img-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-left:38px;}
+.img-thumb{position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--border);}
+.img-thumb img{width:130px;height:90px;object-fit:cover;display:block;}
+.img-del-btn{
+  position:absolute;top:3px;right:3px;
+  background:rgba(0,0,0,.55);color:#fff;
+  border:none;border-radius:50%;width:18px;height:18px;
+  font-size:10px;cursor:pointer;display:none;
+  align-items:center;justify-content:center;
+}
+.card.editing .img-del-btn{display:flex;}
+.img-cap{
+  font-size:10px;color:var(--text3);
+  background:var(--surface2);border:none;
+  border-top:1px solid var(--border);
+  padding:2px 5px;width:130px;
+  font-family:inherit;outline:none;
+}
+
+.card-toolbar{
+  display:none;gap:6px;margin-top:10px;padding-top:8px;
+  border-top:1px solid var(--border);
+  align-items:center;flex-wrap:wrap;
+}
+.card.editing .card-toolbar{display:flex;}
+.tbtn{
+  font-size:11px;padding:4px 10px;border-radius:5px;
+  border:1px solid var(--border);background:var(--surface2);
+  color:var(--text2);cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;gap:4px;transition:all .12s;
+}
+.tbtn i{font-size:13px;}
+.tbtn:hover{border-color:var(--border2);color:var(--text);background:#fff;}
+.tbtn.primary{background:var(--text);color:#fff;border-color:var(--text);}
+.tbtn.primary:hover{background:#333;}
+.tbtn.danger{color:var(--red);border-color:rgba(192,57,43,.25);}
+.tbtn.danger:hover{background:var(--tag-red-bg);}
+
+.add-btn{
+  display:none;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:7px;
+  border:1.5px dashed var(--border2);
+  background:transparent;color:var(--text3);
+  font-size:12px;cursor:pointer;font-family:inherit;
+  transition:all .15s;
+}
+.add-btn:hover{border-color:var(--text);color:var(--text);background:var(--surface);}
+.edit-mode .add-btn{display:inline-flex;}
+
+/* CHECKLIST */
+.cl-group{margin-bottom:1.2rem;}
+.cl-group-title{
+  font-size:12px;font-weight:500;color:var(--text2);
+  margin-bottom:6px;padding-bottom:6px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;
+}
+.cl-group-title i{font-size:15px;color:var(--text3);}
+.cl-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:7px 0;border-bottom:1px solid var(--bg);
+  font-size:12.5px;color:var(--text2);line-height:1.5;
+}
+.cl-item:last-child{border:none;}
+.cb{
+  width:17px;height:17px;border-radius:4px;
+  border:1.5px solid var(--border2);
+  flex-shrink:0;margin-top:1px;
+  background:var(--surface);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--green);transition:all .12s;
+}
+.cb.on{background:var(--green);border-color:var(--green);color:#fff;}
+
+/* SAVE TOAST */
+.toast{
+  position:fixed;bottom:1.5rem;right:1.5rem;
+  background:var(--text);color:#fff;
+  font-size:12px;padding:8px 16px;border-radius:6px;
+  opacity:0;transition:opacity .25s;pointer-events:none;
+  display:flex;align-items:center;gap:6px;
+}
+.toast i{font-size:14px;}
+.toast.show{opacity:1;}
+
+input[type=file]{display:none;}
+
+/* section label */
+.section-label{
+  font-size:10.5px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text3);margin-bottom:1rem;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="header-eyebrow">Renovation Notes</div>
+    <div class="header-title">我的装修笔记</div>
+    <div class="header-sub">踩坑记录 · 好想法 · 验收清单 · 以后自己装</div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-item"><span class="stat-n" id="sn-must">0</span><span class="stat-l">避坑</span></div>
+    <div class="stat-item"><span class="stat-n" id="sn-good">0</span><span class="stat-l">推荐</span></div>
+    <div class="stat-item"><span class="stat-n" id="sn-idea">0</span><span class="stat-l">想做</span></div>
+  </div>
+</div>
+
+<div class="edit-bar">
+  <div class="toggle-wrap" onclick="toggleEdit()">
+    <div class="ttrack" id="ttrack"><div class="tthumb"></div></div>
+    <span id="tlabel">编辑模式：关</span>
+  </div>
+  <span class="edit-hint">· 开启后可修改文字、添加/删除图片、新增记录</span>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('style')"><i class="ti ti-home-2"></i>全局风格</button>
+  <button class="tab" onclick="switchTab('rooms')"><i class="ti ti-layout-grid"></i>按区域</button>
+  <button class="tab" onclick="switchTab('must')"><i class="ti ti-alert-circle"></i>避坑清单</button>
+  <button class="tab" onclick="switchTab('good')"><i class="ti ti-thumb-up"></i>推荐做法</button>
+  <button class="tab" onclick="switchTab('check')"><i class="ti ti-checklist"></i>验收清单</button>
+</div>
+
+<!-- 全局风格 -->
+<div class="panel active" id="panel-style">
+  <div class="section-label">整体家居风格规划</div>
+
+  <div class="style-hero">
+    <div class="style-hero-title"><i class="ti ti-palette"></i>主色调 / 配色方向</div>
+    <div class="style-palette" id="palette-wrap"></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px;" id="palette-hint">点击选色，可多选</div>
+  </div>
+
+  <div class="style-grid">
+    <div class="style-card">
+      <div class="sc-head"><i class="ti ti-armchair"></i>风格关键词</div>
+      <div class="sc-val" id="sc-style" contenteditable="false" data-placeholder="例：现代简约 / 北欧 / 侘寂…">现代简约，干净利落</div>
+    </div>
+    <div class="style-card">
+      <div class="sc-head"><i class="ti ti-building"></i>户型</div>
+      <div class="sc-val" id="sc-type" contenteditable="false" data-placeholder="例：两房一厅 / 三房两卫…">待填写</div>
+    </div>
+    <div class="style-card">
+      <div class="sc-head"><i class="ti ti-trees"></i>材质偏好</div>
+      <div class="sc-val" id="sc-mat" contenteditable="false" data-placeholder="例：浅色木纹、哑光金属、水泥感…">浅色木纹 + 哑光金属</div>
+    </div>
+    <div class="style-card">
+      <div class="sc-head"><i class="ti ti-coin"></i>预算范围</div>
+      <div class="sc-val" id="sc-budget" contenteditable="false" data-placeholder="例：15–20万全包…">待填写</div>
+    </div>
+  </div>
+
+  <div class="style-hero" style="margin-bottom:1.2rem;">
+    <div class="style-hero-title"><i class="ti ti-tag"></i>喜欢的风格标签</div>
+    <div class="style-tags" id="style-tags-wrap"></div>
+  </div>
+
+  <div class="style-note">
+    <div class="sc-head" style="margin-bottom:8px;"><i class="ti ti-notes"></i>整体构想备忘</div>
+    <div class="style-note-body" id="style-note-body" contenteditable="false" data-placeholder="在这里写下你对整体家居风格的想象……">
+两房一厅的话，主卧做主人用，次卧做客房+储物室结合。客厅不买茶几，留空间坐地，沙发选可展开的款式。餐厅和客厅柜子连起来做整体储物墙。整体色调偏浅、干净，不要太多装饰。
+    </div>
+  </div>
+</div>
+
+<!-- 按区域 -->
+<div class="panel" id="panel-rooms">
+  <div class="room-pills" id="rpills"></div>
+  <div id="rsections"></div>
+</div>
+
+<!-- 避坑 -->
+<div class="panel" id="panel-must">
+  <div class="section-label">装修前必须注意的事项</div>
+  <div class="cards" id="must-cards"></div>
+</div>
+
+<!-- 推荐 -->
+<div class="panel" id="panel-good">
+  <div class="section-label">观察到的好做法 · 以后想复刻</div>
+  <div class="cards" id="good-cards"></div>
+</div>
+
+<!-- 验收 -->
+<div class="panel" id="panel-check">
+  <div class="section-label">收房验收 · 逐项打勾确认</div>
+  <div id="cl-wrap"></div>
+</div>
+
+<div class="toast" id="toast"><i class="ti ti-check"></i>已保存</div>
+<input type="file" id="file-input" accept="image/*" multiple>
+
+<script>
+const PALETTES=[
+  {c:'#F5F0E8',l:'米白'},{c:'#E8E0D0',l:'暖米'},{c:'#D4C5A9',l:'燕麦'},
+  {c:'#C9B99A',l:'驼色'},{c:'#A8896A',l:'棕木'},{c:'#6B7C6E',l:'灰绿'},
+  {c:'#8FA3B1',l:'雾蓝'},{c:'#B5B5B5',l:'浅灰'},{c:'#5C5C5C',l:'深灰'},
+  {c:'#2C2C2C',l:'炭黑'},{c:'#E8D5C4',l:'蜜桃'},{c:'#D4E0D4',l:'浅绿'}
+];
+const STYLE_TAGS=['现代简约','北欧风','侘寂风','日式原木','工业风','奶油风','轻奢','极简黑白','性冷淡风','法式','复古'];
+const ROOM_ICONS={厨房:'ti-tools-kitchen-2',玄关:'ti-door-enter',走线:'ti-plug',灯光:'ti-bulb',衣柜:'ti-hanger',客厅:'ti-sofa',卧室:'ti-bed',阳台:'ti-sun',餐厅:'ti-coffee',卫生间:'ti-droplet'};
+const TYPE_ICONS={must:'ti-alert-circle',good:'ti-circle-check',idea:'ti-sparkles'};
+const TYPE_LABELS={must:'避坑',good:'推荐',idea:'想做'};
+const ROOMS=['厨房','玄关','走线','灯光','衣柜','客厅','卧室','阳台','餐厅','卫生间'];
+
+let DATA=[
+  {id:1,room:'厨房',type:'must',title:'抽风机必备，选方便拆洗不滴油的款式',body:'烟机是厨房灵魂。选购时重点看：拆洗是否方便（免拆洗最佳），油杯是否防溢，吸力是否够大。建议在实体店亲自试用后再决定。',imgs:[]},
+  {id:2,room:'厨房',type:'must',title:'洗碗机 + 消毒一体，提前规划嵌入位',body:'洗碗机提前留好嵌入尺寸，优先选带消毒烘干功能的。记得提前确认水电接口位置，避免装修后再改造。',imgs:[]},
+  {id:3,room:'厨房',type:'good',title:'水槽做大做深，配可拉伸软管水龙头',body:'水槽要深要大，方便洗锅。水龙头选可拉出软管款，冲洗四角和大锅更方便。水槽旁做沥水架，可放置洗菜篮，台面保持整洁。',imgs:[]},
+  {id:4,room:'厨房',type:'good',title:'高频小家电嵌入柜体或推拉门隐藏',body:'电饭锅、微波炉、烤箱、绞肉机使用频率最高，建议做嵌入式收纳柜或推拉门隐藏。台面只留最常用的，低频家电收进深柜。',imgs:[]},
+  {id:5,room:'厨房',type:'idea',title:'水槽区嵌入杯具自动冲洗装置',body:'有条件可以在水槽区嵌入一个自动冲洗杯具的装置，冲杯子更快更干净。装修前需预留安装孔位。',imgs:[]},
+  {id:6,room:'厨房',type:'good',title:'柜内分区：锅具 / 五谷 / 调料各归其位',body:'锅具放大抽屉或下柜（加隔板分层）；五谷豆类用密封罐+抽拉式收纳盒；油盐酱醋放台面旁调料架，选带挡边的防滑落。',imgs:[]},
+  {id:7,room:'玄关',type:'good',title:'走廊装感应灯，回家自动亮',body:'走廊或长廊装人体感应灯，进门自动点亮。推荐做在踢脚线高度（地灯）或天花板内嵌，美观且实用。',imgs:[]},
+  {id:8,room:'玄关',type:'good',title:'玄关标配：换鞋凳 + 挂衣钩 + 全身镜',body:'进门放换鞋凳；门口做挂钩（临时挂包、外套）；旁边必须有全身镜，出门前最后一道检查。',imgs:[]},
+  {id:9,room:'玄关',type:'good',title:'鞋柜底部留空，直接踢进拖鞋',body:'鞋柜最底层不做柜门，留 15–20 cm 高度的空位，回家脱鞋直接踢进去，方便又通风。柜子有条件做到顶，减少积灰。',imgs:[]},
+  {id:10,room:'玄关',type:'idea',title:'玄关入口设小洗手台',body:'如果空间允许，玄关入口设一个小洗手台，回家第一时间洗手，也方便访客使用。需提前规划给排水管线。',imgs:[]},
+  {id:11,room:'走线',type:'must',title:'排插位置装修前全部确定，宁多勿少',body:'装修开工前列好每个区域的家电清单，确定排插数量和位置。厨房、书桌、电视墙、床头都要多留备用口。',imgs:[]},
+  {id:12,room:'走线',type:'must',title:'挂机空调提前规划排水管走向',body:'如果不做中央空调，分体挂机的排水管必须提前规划走线和排水口，避免后期破坏已装修墙面。',imgs:[]},
+  {id:13,room:'走线',type:'must',title:'热水管线尽量短，避免等热水过久',body:'燃气热水器到卫生间的管线越短越好，否则每次开热水都要等很久。距离远时考虑加装热水循环泵，或选带保温的电热水器（以更省钱的方案为准）。',imgs:[]},
+  {id:14,room:'走线',type:'good',title:'弱电井 + 路由器位置提前规划',body:'弱电箱和路由器位置影响全屋网络信号。建议路由器放在房屋中心或客厅，弱电井集中管理网线、有线电视线等。',imgs:[]},
+  {id:15,room:'灯光',type:'must',title:'双控开关：进门 + 床头，缺一不可',body:'每个卧室门口一个开关，床头也要有一个，形成双控回路。否则关灯要起床走到门口——这是最容易被遗漏的细节。',imgs:[]},
+  {id:16,room:'灯光',type:'idea',title:'考虑智能灯控全屋联动',body:'如果预算允许，做智能家居灯控系统（如米家/涂鸦），手机控制、定时、联动。不做的话至少保证玄关和各卧室门口都有独立开关。',imgs:[]},
+  {id:17,room:'灯光',type:'must',title:'灯位设计要先确认床的摆放方向',body:'设计天花灯和床头灯位置时，必须先确定床的朝向和尺寸，避免灯正对床头或床头灯接口位置偏差。',imgs:[]},
+  {id:18,room:'衣柜',type:'must',title:'选可调节框架式衣柜，不锈钢或钛钢',body:'普通固定隔板衣柜很快就会不够用。推荐可调节层板的框架式衣柜（不锈钢或钛钢材质），根据需要灵活增减挂衣区、叠衣区、抽屉。',imgs:[]},
+  {id:19,room:'衣柜',type:'must',title:'提前留好行李箱 + 厚被子的专属空间',body:'行李箱（28寸以上）和厚被子最占空间，需提前规划专区。行李箱区高度约 70 cm，被子区做大格。',imgs:[]},
+  {id:20,room:'衣柜',type:'good',title:'内衣内裤单独做小格抽屉收纳',body:'专门留 2–3 个小格抽屉用于收纳内衣内裤，或用隔断盒分区，方便取用不混乱。',imgs:[]},
+  {id:21,room:'客厅',type:'must',title:'电视挂墙，墙内提前预埋走线管',body:'壁挂电视整洁省空间不积灰。提前在墙内预埋走线管道，线缆全部隐藏。电视柜可省掉或用长条柜代替。',imgs:[]},
+  {id:22,room:'客厅',type:'good',title:'做展示收纳柜，放茶叶零食日用品',body:'客厅做一组定制柜（可与餐厅柜打通），格子用来展示摆件、收纳茶叶、零食、日常用品，整洁实用。',imgs:[]},
+  {id:23,room:'客厅',type:'good',title:'不买茶几，留地面空间，备折叠桌',body:'茶几使用率低，不买或用小圆凳替代。客厅留出地面空间放坐垫+地毯更舒适。临时需要桌面时用折叠桌，收起不占地方。',imgs:[]},
+  {id:24,room:'客厅',type:'idea',title:'沙发可展开成床，帘子隔断做客房',body:'两房户型客厅沙发选可展开为床的款式，配帘子隔断（注意不影响客厅美观），来客时多一个睡眠空间。',imgs:[]},
+  {id:25,room:'卧室',type:'good',title:'次卧做客房 + 储物室结合',body:'次卧规划：定制柜收纳杂物 + 折叠壁床（白天收起是柜子，晚上放下是床）。三房的话多一个完整次卧，可配齐床铺。',imgs:[]},
+  {id:26,room:'卧室',type:'idea',title:'折叠壁床（Murphy Bed），平时隐藏',body:'墙壁翻折床白天合上是柜子，晚上放下是单/双人床。比固定床更适合偶尔使用的客房，不占日常空间。',imgs:[]},
+  {id:27,room:'阳台',type:'good',title:'升降晾衣架，方便晾晒棉被',body:'选电动或手动升降款晾衣架，平时升高不碍事，晾棉被时降下来方便挂取，比固定式好用得多。',imgs:[]},
+  {id:28,room:'阳台',type:'good',title:'洗烘一体滚筒 + 阳台洗手池',body:'滚筒洗衣机洗涤更干净，选洗烘一体省空间。阳台必须留洗手池，方便预洗和涮拖把。记得提前规划给排水。',imgs:[]},
+  {id:29,room:'阳台',type:'good',title:'阳台柜集中收纳洗衣用品',body:'做一组矮柜或顶柜，专门放洗衣液、漂白剂、柔顺剂、清洁剂等，分类整齐，不随处摆放。',imgs:[]},
+  {id:30,room:'餐厅',type:'idea',title:'装吊扇灯，吃饭不闷热有氛围',body:'餐厅装吊扇灯，吃饭时开风扇可以代替空调，凉爽省电，同时增加生活感。选款式好看的，餐厅氛围直接提升。',imgs:[]},
+  {id:31,room:'餐厅',type:'good',title:'餐桌选可伸缩款，适应不同人数',body:'平时 2–4 人用小桌，来客多时拉开扩展。比固定大桌更灵活，餐厅平时也不会显得空旷或拥挤。',imgs:[]},
+  {id:32,room:'餐厅',type:'good',title:'餐柜与客厅柜打通，一体规划',body:'餐厅和客厅相连时，两侧柜子做统一设计。一侧放酒/茶叶，一侧放零食/日用品，形成整体储物墙，大气实用。',imgs:[]},
+  {id:33,room:'卫生间',type:'good',title:'空间够才做干湿分离，小卫生间不强求',body:'干湿分离看空间是否充足（一般 6㎡ 以上再考虑）。空间小硬做反而更拥挤。不分离时地漏位置和坡度必须做好。',imgs:[]},
+  {id:34,room:'卫生间',type:'must',title:'浴室柜选悬空款，方便冲洗地面',body:'浴室柜选悬空款（离地 15–20 cm），底部可冲洗不积水积污。抽屉格子分区放：卫生纸、护肤品、化妆品、洗浴用品、吹风机。',imgs:[]},
+  {id:35,room:'卫生间',type:'must',title:'卫生间留防水排插',body:'洗手台附近留至少 1–2 个防水排插，用于吹风机、剃须刀、美容仪等。需与水源保持安全距离，使用防水盖板插座。',imgs:[]}
+];
+
+const CHECKLIST={
+  '水电验收':{icon:'ti-plug',items:['全部插座通电测试（用插排测试仪）','开关灯控回路逐一确认','双控开关两端都测试','空调排水管方向和出水顺畅','热水管线长度，开热水等待时间可接受']},
+  '防水验收':{icon:'ti-droplet',items:['卫生间闭水试验（蓄水 48 小时）','地漏位置在最低点，坡度正确','阳台地漏排水通畅','洗手台下水无渗漏']},
+  '瓦工地砖':{icon:'ti-tools',items:['地砖空鼓检测（全部敲击听声）','墙砖无开裂、空鼓','瓷砖缝隙均匀，美缝完整','门槛石高度合理，无绊脚风险']},
+  '木工柜体':{icon:'ti-door',items:['柜门开合顺畅，无变形','抽屉推拉无卡顿异响','铰链螺丝全部拧紧','衣柜内行李箱位尺寸核对','悬空柜体固定牢固不晃动']},
+  '智能弱电':{icon:'ti-wifi',items:['路由器位置全屋信号覆盖测试','弱电箱理线整齐有标签','智能开关配对调试完成','玄关感应灯触发正常']},
+  '最终收尾':{icon:'ti-circle-check',items:['全部窗户开合测试，密封条完整','墙面无气泡、裂纹、漏涂','厨房抽烟机试机吸力正常','洗碗机通水通电测试','全屋拍照存档']}
+};
+
+let editMode=false;
+let nextId=36;
+let cbStates={};
+let selectedColors=[];
+let selectedTags=[];
+let currentUploadId=null;
+
+function save(){
+  try{
+    localStorage.setItem('reno_v2_data',JSON.stringify(DATA));
+    localStorage.setItem('reno_v2_cb',JSON.stringify(cbStates));
+    localStorage.setItem('reno_v2_colors',JSON.stringify(selectedColors));
+    localStorage.setItem('reno_v2_tags',JSON.stringify(selectedTags));
+    // save style fields
+    const fields=['sc-style','sc-type','sc-mat','sc-budget','style-note-body'];
+    const vals={};
+    fields.forEach(f=>{const el=document.getElementById(f);if(el)vals[f]=el.innerHTML;});
+    localStorage.setItem('reno_v2_style',JSON.stringify(vals));
+  }catch(e){}
+  showToast();
+}
+
+function load(){
+  try{
+    const d=localStorage.getItem('reno_v2_data');
+    const c=localStorage.getItem('reno_v2_cb');
+    const col=localStorage.getItem('reno_v2_colors');
+    const tags=localStorage.getItem('reno_v2_tags');
+    if(d)DATA=JSON.parse(d);
+    if(c)cbStates=JSON.parse(c);
+    if(col)selectedColors=JSON.parse(col);
+    if(tags)selectedTags=JSON.parse(tags);
+  }catch(e){}
+}
+
+function loadStyleFields(){
+  try{
+    const s=localStorage.getItem('reno_v2_style');
+    if(!s)return;
+    const vals=JSON.parse(s);
+    Object.entries(vals).forEach(([id,html])=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+  }catch(e){}
+}
+
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function updateStats(){
+  document.getElementById('sn-must').textContent=DATA.filter(d=>d.type==='must').length;
+  document.getElementById('sn-good').textContent=DATA.filter(d=>d.type==='good').length;
+  document.getElementById('sn-idea').textContent=DATA.filter(d=>d.type==='idea').length;
+}
+
+function toggleEdit(){
+  editMode=!editMode;
+  const track=document.getElementById('ttrack');
+  const label=document.getElementById('tlabel');
+  track.classList.toggle('on',editMode);
+  label.textContent='编辑模式：'+(editMode?'开':'关');
+  document.body.classList.toggle('edit-mode',editMode);
+  // toggle contenteditable on cards
+  document.querySelectorAll('.card-title,.card-body').forEach(el=>el.contentEditable=editMode);
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('editing',editMode));
+  // style fields
+  ['sc-style','sc-type','sc-mat','sc-budget','style-note-body'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.contentEditable=editMode;
+  });
+}
+
+function cardHTML(d){
+  const typeClass=d.type;
+  const imgs=d.imgs&&d.imgs.length?
+    `<div class="img-grid">${d.imgs.map((img,i)=>`<div class="img-thumb"><img src="${img.url}" alt="${img.cap}" onerror="this.style.display='none'"><button class="img-del-btn" onclick="delImg(${d.id},${i})">✕</button><input class="img-cap" value="${img.cap}" placeholder="备注" onchange="updateImgCap(${d.id},${i},this.value)"></div>`).join('')}</div>`:'';
+  return `<div class="card ${typeClass}" id="card-${d.id}" data-id="${d.id}">
+    <div class="card-top">
+      <div class="card-left">
+        <div class="card-icon ci-${typeClass}"><i class="ti ${TYPE_ICONS[typeClass]}"></i></div>
+        <div class="card-title" contenteditable="${editMode}">${d.title}</div>
+      </div>
+      <span class="card-badge b-${typeClass}"><i class="ti ${TYPE_ICONS[typeClass]}"></i>${TYPE_LABELS[typeClass]}</span>
+    </div>
+    <div class="card-body" contenteditable="${editMode}">${d.body}</div>
+    ${imgs}
+    <div class="card-toolbar">
+      <button class="tbtn primary" onclick="saveCard(${d.id})"><i class="ti ti-check"></i>保存</button>
+      <button class="tbtn" onclick="addImgUrl(${d.id})"><i class="ti ti-link"></i>粘贴图片链接</button>
+      <button class="tbtn" onclick="triggerUpload(${d.id})"><i class="ti ti-upload"></i>上传图片</button>
+      <button class="tbtn danger" onclick="delCard(${d.id})"><i class="ti ti-trash"></i>删除</button>
+    </div>
+  </div>`;
+}
+
+function renderRooms(){
+  document.getElementById('rpills').innerHTML=ROOMS.map((r,i)=>`<button class="pill${i===0?' active':''}" onclick="switchRoom('${r}',this)"><i class="ti ${ROOM_ICONS[r]||'ti-home'}"></i>${r}</button>`).join('');
+  document.getElementById('rsections').innerHTML=ROOMS.map((r,i)=>{
+    const items=DATA.filter(d=>d.room===r);
+    return `<div class="room-sec${i===0?' active':''}" id="rsec-${r}">
+      <div class="room-heading"><i class="ti ${ROOM_ICONS[r]||'ti-home'}"></i>${r}<span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:4px">${items.length} 条</span></div>
+      <div class="cards">${items.map(d=>cardHTML(d)).join('')}</div>
+      <button class="add-btn" onclick="addCard('${r}')"><i class="ti ti-plus"></i>在「${r}」添加新记录</button>
+    </div>`;
+  }).join('');
+}
+
+function renderFiltered(type,containerId){
+  document.getElementById(containerId).innerHTML=DATA.filter(d=>d.type===type).map(d=>cardHTML(d)).join('');
+}
+
+function renderChecklist(){
+  document.getElementById('cl-wrap').innerHTML=Object.entries(CHECKLIST).map(([sec,{icon,items}])=>`
+    <div class="cl-group">
+      <div class="cl-group-title"><i class="ti ${icon}"></i>${sec}</div>
+      ${items.map((item,i)=>{
+        const key=`${sec}-${i}`;const on=cbStates[key];
+        return `<div class="cl-item"><div class="cb${on?' on':''}" onclick="toggleCb('${key}',this)">${on?'✓':''}</div><span>${item}</span></div>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+function renderPalette(){
+  document.getElementById('palette-wrap').innerHTML=PALETTES.map(p=>`
+    <div class="swatch-wrap">
+      <div class="swatch${selectedColors.includes(p.c)?' selected':''}" style="background:${p.c}" onclick="toggleColor('${p.c}',this)" title="${p.l}"></div>
+      <div class="swatch-label">${p.l}</div>
+    </div>`).join('');
+}
+
+function renderStyleTags(){
+  document.getElementById('style-tags-wrap').innerHTML=STYLE_TAGS.map(t=>`<span class="style-tag${selectedTags.includes(t)?' selected':''}" onclick="toggleStyleTag('${t}',this)">${t}</span>`).join('');
+}
+
+function toggleColor(c,el){
+  const idx=selectedColors.indexOf(c);
+  if(idx>-1)selectedColors.splice(idx,1);
+  else selectedColors.push(c);
+  el.classList.toggle('selected',selectedColors.includes(c));
+  save();
+}
+function toggleStyleTag(t,el){
+  const idx=selectedTags.indexOf(t);
+  if(idx>-1)selectedTags.splice(idx,1);
+  else selectedTags.push(t);
+  el.classList.toggle('selected',selectedTags.includes(t));
+  save();
+}
+
+function switchTab(tab){
+  const tabs=['style','rooms','must','good','check'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===tab));
+  tabs.forEach(p=>document.getElementById('panel-'+p).classList.toggle('active',p===tab));
+}
+function switchRoom(room,btn){
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.room-sec').forEach(s=>s.classList.remove('active'));
+  document.getElementById('rsec-'+room).classList.add('active');
+}
+function toggleCb(key,el){
+  cbStates[key]=!cbStates[key];
+  el.classList.toggle('on',cbStates[key]);
+  el.textContent=cbStates[key]?'✓':'';
+  save();
+}
+
+function saveCard(id){
+  const card=document.getElementById('card-'+id);
+  const d=DATA.find(x=>x.id===id);
+  if(!d||!card)return;
+  d.title=card.querySelector('.card-title').innerText.trim();
+  d.body=card.querySelector('.card-body').innerText.trim();
+  save();
+}
+function delCard(id){
+  if(!confirm('确定删除这条记录？'))return;
+  DATA=DATA.filter(d=>d.id!==id);
+  save();
+  document.getElementById('card-'+id)?.remove();
+  updateStats();
+}
+function addCard(room){
+  const d={id:nextId++,room,type:'good',title:'新记录',body:'点击编辑按钮后可修改内容……',imgs:[]};
+  DATA.push(d);
+  updateStats();
+  const sec=document.getElementById('rsec-'+room);
+  if(sec){
+    const cards=sec.querySelector('.cards');
+    cards.insertAdjacentHTML('beforeend',cardHTML(d));
+    const newCard=document.getElementById('card-'+d.id);
+    newCard.classList.toggle('editing',editMode);
+    newCard.querySelectorAll('.card-title,.card-body').forEach(el=>el.contentEditable=editMode);
+    newCard.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  save();
+}
+function addImgUrl(id){
+  const url=prompt('请粘贴图片链接（http/https 开头）：');
+  if(!url||!url.trim())return;
+  const cap=prompt('给这张图片加个备注（可留空）：')||'';
+  const d=DATA.find(x=>x.id===id);
+  if(!d)return;
+  d.imgs=d.imgs||[];
+  d.imgs.push({url:url.trim(),cap});
+  save();
+  const card=document.getElementById('card-'+id);
+  if(card){
+    const existing=card.querySelector('.img-grid');
+    if(existing)existing.remove();
+    const newImgsHTML=`<div class="img-grid">${d.imgs.map((img,i)=>`<div class="img-thumb"><img src="${img.url}" alt="${img.cap}"><button class="img-del-btn" onclick="delImg(${id},${i})">✕</button><input class="img-cap" value="${img.cap}" placeholder="备注" onchange="updateImgCap(${id},${i},this.value)"></div>`).join('')}</div>`;
+    card.querySelector('.card-body').insertAdjacentHTML('afterend',newImgsHTML);
+    if(editMode)card.querySelectorAll('.img-del-btn').forEach(b=>b.style.display='flex');
+  }
+}
+function triggerUpload(id){
+  currentUploadId=id;
+  document.getElementById('file-input').click();
+}
+document.getElementById('file-input').addEventListener('change',function(){
+  const id=currentUploadId;
+  const d=DATA.find(x=>x.id===id);
+  if(!d)return;
+  d.imgs=d.imgs||[];
+  Array.from(this.files).forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      d.imgs.push({url:e.target.result,cap:file.name.replace(/\.[^.]+$/,'')});
+      save();
+      const card=document.getElementById('card-'+id);
+      if(card){
+        const existing=card.querySelector('.img-grid');
+        if(existing)existing.remove();
+        const html=`<div class="img-grid">${d.imgs.map((img,i)=>`<div class="img-thumb"><img src="${img.url}" alt="${img.cap}"><button class="img-del-btn" onclick="delImg(${id},${i})" style="${editMode?'display:flex':''}">✕</button><input class="img-cap" value="${img.cap}" placeholder="备注" onchange="updateImgCap(${id},${i},this.value)"></div>`).join('')}</div>`;
+        card.querySelector('.card-body').insertAdjacentHTML('afterend',html);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+  this.value='';
+});
+function delImg(cardId,imgIdx){
+  const d=DATA.find(x=>x.id===cardId);
+  if(!d)return;
+  d.imgs.splice(imgIdx,1);
+  save();
+  const card=document.getElementById('card-'+cardId);
+  if(card){const g=card.querySelector('.img-grid');if(g)g.remove();if(d.imgs.length){const html=`<div class="img-grid">${d.imgs.map((img,i)=>`<div class="img-thumb"><img src="${img.url}" alt="${img.cap}"><button class="img-del-btn" onclick="delImg(${cardId},${i})" style="${editMode?'display:flex':''}">✕</button><input class="img-cap" value="${img.cap}" placeholder="备注" onchange="updateImgCap(${cardId},${i},this.value)"></div>`).join('')}</div>`;card.querySelector('.card-body').insertAdjacentHTML('afterend',html);}}
+}
+function updateImgCap(cardId,imgIdx,val){
+  const d=DATA.find(x=>x.id===cardId);
+  if(d&&d.imgs[imgIdx])d.imgs[imgIdx].cap=val;
+  save();
+}
+
+// style field auto-save
+['sc-style','sc-type','sc-mat','sc-budget','style-note-body'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('blur',save);
+});
+
+// init
+load();
+renderPalette();
+renderStyleTags();
+renderRooms();
+renderFiltered('must','must-cards');
+renderFiltered('good','good-cards');
+renderChecklist();
+updateStats();
+loadStyleFields();
+</script>
+</body>
+</html>
